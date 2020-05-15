@@ -1,0 +1,77 @@
+body{
+    background: #d3d3d3;
+}
+.mianBody{
+    width:1100px;
+    margin: 0 auto;
+}
+.Img_heard{
+    width:1100px;
+    height:115px;
+}
+
+.Img_heard img{
+    width:1100px;
+    height: 115px;
+}
+.mianContent{
+    width: 100%;
+    height:1500px;
+    margin-top: 10px;
+}
+.content_left{
+    width:200px;
+    float: left;
+    height:100%;
+    background: #393D49;
+}
+.content_right{
+    width: 890px;
+    float: left;
+    height: 100%;
+    margin-left: 10px;
+
+}
+.right_img{
+    width: 100%;
+    height: 280px;
+}
+.lu_img img{
+    width: 100%;
+    height: 280px;
+    background: #0C0C0C;
+}
+.right_content{
+    width: 100%;
+    height: 1210px;
+    margin-top: 10px;
+    background: #FFFFFF;
+}
+.right_content_list{
+    width: 85%;
+    /*height: 1000px;*/
+    float: left;
+    margin-top: 66px;
+    margin-left: 62px;
+}
+.pageBean{
+    width: 85%;
+    /*height: 100px;*/
+    float: left;
+    margin-left: 62px;
+    text-align: center;
+    /*background: #eb7350;*/
+}
+.bodyFoot{
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+    background: #0000FF;
+}
+.contentP{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    /*background: #00F7DE;*/
+}

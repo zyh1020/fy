@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rsyb.fydao.data.DataDao">
+
+    <!-- 目的：为dao接口方法提供sql语句配置 -->
+    <insert id="insertOneData" parameterType="com.rsyb.fydomain.data.FyData" >
+        <!-- 具体的sql -->
+        INSERT INTO fy_data(
+        fydid,
+        fyuid,
+        fyname,
+        fyidcard,
+        fyage,
+        fysex,
+        fyprovince,
+        fycity,
+        fycounty,
+        fystatus,
+        fytdate)
+        VALUES(#{fyDid},#{fyUid},#{fyName},
+                #{fyIdCard},#{fyAge},#{fySex},
+                #{fyProvince},#{fyCity},#{fyCounty},
+                #{fyStatus},#{fyTdate}
+                )
+    </insert>
+
+
+    <select id="testDate" parameterType="java.util.Date" resultType="java.lang.Integer" >
+        SELECT count(*) FROM fy_data
+        where fytdate = DATE_SUB(#{fyTdate}, INTERVAL 25 DAY)
+    </select>
+
+    <!-- 统计-->
+    <select id="conuntDate" parameterType="com.rsyb.fydomain.data.analysis.ContionSort" resultType="java.lang.Integer" >
+        SELECT count(*) FROM fy_data
+        <where>
+            <if  test="fyCity != null and fyCity != '' ">
+                and fyprovince = #{fyCity}
+            </if>
+            <if  test="fySort != null and fySort != '' ">
+                and  fystatus = #{fySort}
+            </if>
+            <if  test="fyTdate != null">
+                and fytdate = DATE_SUB(#{fyTdate}, INTERVAL #{fyNumber} DAY)
+            </if>
+        </where>
+    </select>
+
+    <!-- 修改：-->
+    <update id="updateOneData" parameterType="com.rsyb.fydomain.data.FyData">
+        UPDATE fy_data SET
+        <if test="fyName != null and fyName != ''">
+            fyname = #{fyName},
+        </if>
+        <if test="fyIdCard != null and fyIdCard != ''">
+            fyidcard = #{fyIdCard},
+        </if>
+        <if test="fyAge != null and fyAge != ''">
+            fyage = #{fyAge},
+        </if>
+        <if test="fySex != null and fySex != ''">
+            fysex = #{fySex},
+        </if>
+        <if test="fyProvince != null and fyProvince != ''">
+            fyprovince = #{fyProvince},
+        </if>
+        <if test="fyCity != null and fyCity != ''">
+            fycity = #{fyCity},
+        </if>
+        <if test="fyCounty != null and fyCounty != ''">
+            fycounty = #{fyCounty},
+        </if>
+        <if test="fyStatus != null and fyStatus != ''">
+            fystatus = #{fyStatus},
+        </if>
+        <if test="fyTdate != null">
+            fytdate = #{fyTdate}
+        </if>
+        WHERE
+        fydid = #{fyDid}
+    </update>
+
+    <!-- 根据id查询 -->
+    <select id="selectOneData" resultType="com.rsyb.fydomain.data.FyData">
+         select fydid,
+                fyuid,
+                fyname,
+                fyidcard,
+                fyage,
+                fysex,
+                fyprovince,
+                fycity,
+                fycounty,
+                fystatus,
+                fytdate
+          from fy_data
+          where
+           fydid =#{fyDid}
+
+    </select>
+    <!-- 统计-->
+    <select id="countSortFyData" resultType="java.lang.Integer" parameterType="com.rsyb.fydomain.data.analysis.ContionSort">
+        select count(*) from fy_data
+        <where>
+            <if  test="fyCity != null and fyCity != '' ">
+                and fyprovince = #{fyCity}
+            </if>
+            <if  test="fySort != null and fySort != '' ">
+                and  fystatus = #{fySort}
+            </if>
+            <if  test="fyTdate != null">
+                and fytdate = #{fyTdate}
+            </if>
+        </where>
+
+    </select>
+    <!-- 删除数据 -->
+    <delete id="deleteOneData">
+        DELETE FROM fy_data
+        WHERE
+        fyuid = #{param1}
+        and fydid = #{param2}
+
+    </delete>
+
+    <select id="conditionSelectDatas" parameterType="com.rsyb.fydomain.data.FyConditionData" resultType="com.rsyb.fydomain.data.FyData">
+        select fydid,
+        fyuid,
+        fyname,
+        fyidcard,
+        fyage,
+        fysex,
+        fyprovince,
+        fycity,
+        fycounty,
+        fystatus,
+        fytdate
+        from fy_data
+        <where>
+            <if  test="fyUid != null and fyUid != '' ">
+                AND fyuid = #{fyUid}
+            </if>
+            <if  test="fyName != null and fyName != '' ">
+                AND fyname like CONCAT('%', #{fyName}, '%')
+            </if>
+            <if  test="fyIdCard != null and fyIdCard != '' ">
+                AND fyidcard = #{fyIdCard}
+            </if>
+            <if  test="fySex != null and fySex != '' ">
+                AND fysex = #{fySex}
+            </if>
+            <if  test="fyAge != null">
+                AND fyage &gt;= #{fyAge}
+            </if>
+            <if  test="endAge != null">
+                AND fyage &lt;= #{endAge}
+            </if>
+            <if  test="fyProvince != null and fyProvince != '' ">
+                AND fyprovince = #{fyProvince}
+            </if>
+            <if  test="fyCity != null and fyCity != '' ">
+                AND fycity = #{fyCity}
+            </if>
+            <if  test="fyCounty != null and fyCounty != '' ">
+                AND fycounty = #{fyCounty}
+            </if>
+
+            <if  test="fyStatus != null and fyStatus != '' ">
+                AND fystatus = #{fyStatus}
+            </if>
+
+            <if test="fyTdate != null and endTdate != null">
+                AND
+                fytdate
+                between #{fyTdate} and #{endTdate}
+            </if>
+        </where>
+    </select>
+
+</mapper>

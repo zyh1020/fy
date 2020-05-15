@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	   http://www.springframework.org/schema/aop
+	   http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	   http://www.springframework.org/schema/tx
+	   http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	   http://www.springframework.org/schema/util
+	   http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+
+    <!-- 配置注解扫描器 -->
+    <context:component-scan base-package="com.rsyb.fycontrol"></context:component-scan>
+    <context:component-scan base-package="com.rsyb.fyservice"></context:component-scan>
+    <context:component-scan base-package="com.rsyb.fydomain"></context:component-scan>
+
+    <!-- 加载配置文件 -->
+    <context:property-placeholder location="classpath:db.properties" />
+
+    <!-- 数据库连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxActive" value="10" />
+        <property name="maxIdle" value="5" />
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据库连接池 -->
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="com.rsyb.fydomian"/><!-- 默认将实体类的类名小写就是起别名是mapper.xml中reusltype和paramartype中 -->
+        <!--加载mapper.xml 文件-->
+        <property name="mapperLocations" value="classpath*:mapper/**/*.xml"/>
+    </bean>
+
+    <!-- 配置Mapper扫描器 -->
+    <!-- sqlsession得到后需要通过sqlsession来得到接口的实现类需要调用sqlsessio.getMapper(xxx.Class) -->
+    <!-- Mybatis MapperScannerConfigurer 自动扫描 将Mapper接口生成代理注入到Spring-->
+    <bean  id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.rsyb.fydao"/>
+    </bean>
+
+    <!-- 编写事务代码   这个是事务平台管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+    </bean>
+
+    <!-- 组装切点加额外功能 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- google kaptcha的相关配置-->
+    <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <property name="config">
+            <bean class="com.google.code.kaptcha.util.Config">
+                <constructor-arg>
+                    <props>
+                        <!-- 是否有边框 可选yes 或者 no -->
+                        <prop key="kaptcha.border">yes</prop>
+                        <!-- 边框颜色 -->
+                        <prop key="kaptcha.border.color">105,179,90</prop>
+                        <!-- 验证码文本字符颜色 -->
+                        <prop key="kaptcha.textproducer.font.color">blue</prop>
+                        <!-- 验证码文本字符大小 -->
+                        <prop key="kaptcha.textproducer.font.size">36</prop>
+                        <!-- 验证码图片的宽度 默认200 -->
+                        <prop key="kaptcha.image.width">125</prop>
+                        <!-- 验证码图片的高度 默认50 -->
+                        <prop key="kaptcha.image.height">38</prop>
+                        <!-- 验证码文本字符长度  默认为5 -->
+                        <prop key="kaptcha.textproducer.char.length">4</prop>
+                        <!-- 验证码文本字体样式  默认为new Font("Arial", 1, fontSize), new Font("Courier", 1, fontSize)  -->
+                        <prop key="kaptcha.textproducer.font.names">宋体,楷体,微软雅黑</prop>
+                    </props>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

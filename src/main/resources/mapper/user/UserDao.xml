@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rsyb.fydao.user.UserDao">
+    <!-- 目的：为dao接口方法提供sql语句配置 -->
+    <insert id="registUser" parameterType="com.rsyb.fydomain.user.FyUser" >
+        <!-- 具体的sql -->
+        INSERT INTO fy_user(fyuid,fyname,fypassword,fyphone)
+        VALUES(#{fyUid},#{fyName},#{fyPassword},#{fyPhone})
+    </insert>
+
+    <!-- 1，注册时，用于查询用户名是否存在 -->
+    <!-- 1，登陆时，用于查询用户名是否存在，存在验证密码 -->
+    <!-- 查询映射 -->
+    <resultMap id="findUserRM" type="com.rsyb.fydomain.user.FyUser">
+        <id property="fyUid" column="fyuid"/>
+        <result property="fyName" column="fyname"/>
+        <result property="fyPassword" column="fypassword"/>
+        <result property="fyPhone" column="fyphone"/>
+        <!-- 特殊 -->
+        <association property="fy2User" javaType="com.rsyb.fydomain.user2.Fy2User" >
+            <id property="fy2Uid" column="fy2uid"/>
+            <result property="fyUidy" column="fyuidy"/>
+            <result property="fy2Name" column="fy2name"/>
+            <result property="fy2Sex" column="fy2sex"/>
+            <result property="fy2Age" column="fy2age"/>
+            <result property="fy2Img" column="fy2img"/>
+            <result property="fy2Qm" column="fy2qm"/>
+        </association>
+
+    </resultMap>
+    <select id="findUser" resultMap="findUserRM">
+        SELECT fyuid,fyname,fypassword,fyphone,
+        fy2uid,fyuidy,fy2name,fy2sex,fy2age,fy2img,fy2qm
+        FROM fy_user
+        left join fy_2user
+        on fy_user.fyuid = fy_2user.fyuidy
+        WHERE fyname = #{fyName}
+    </select>
+
+</mapper>

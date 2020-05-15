@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rsyb.fydao.user2.User2Dao">
+    <!-- 目的：为dao接口方法提供sql语句配置 -->
+    <!-- 插入 -->
+    <insert id="insertUser2" parameterType="com.rsyb.fydomain.user2.Fy2User" >
+        <!-- 具体的sql -->
+        INSERT INTO fy_2user(fy2uid,fyuidy,fy2name,fy2sex,fy2age,fy2img,fy2qm)
+        VALUES(#{fy2Uid},#{fyUidy},#{fy2Name},#{fy2Sex},#{fy2Age},#{fy2Img},#{fy2Qm})
+    </insert>
+
+   <!-- 主键查询 -->
+    <select id="selectByFy2Uid" resultType="com.rsyb.fydomain.user2.Fy2User">
+        SELECT fy2uid,fyuidy,fy2name,fy2sex,fy2age,fy2img,fy2qm
+        FROM fy_2user
+        WHERE fy2uid = #{fy2Uid}
+    </select>
+
+    <!-- 外键查询 -->
+    <select id="selectByFyUidy" resultType="com.rsyb.fydomain.user2.Fy2User">
+        SELECT fy2uid,fyuidy,fy2name,fy2sex,fy2age,fy2img,fy2sex,fy2qm
+        FROM fy_2user
+        WHERE fyuidy = #{fyUidy}
+    </select>
+
+    <!-- 修改 -->
+    <update id="updateUser2" parameterType="com.rsyb.fydomain.user2.Fy2User">
+        UPDATE fy_2user SET
+          fy2name = #{fy2Name},
+          fy2sex = #{fy2Sex},
+          fy2age = #{fy2Age},
+          fy2qm = #{fy2Qm}
+        WHERE
+        fy2uid = #{fy2Uid}
+    </update>
+
+    <!-- 修改头像 -->
+    <update id="updateUser2OfImg" parameterType="com.rsyb.fydomain.user2.Fy2User">
+        UPDATE fy_2user SET
+         fy2img = #{fy2Img}
+        WHERE
+        fy2uid = #{fy2Uid}
+    </update>
+
+</mapper>
